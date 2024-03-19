@@ -37,7 +37,7 @@ version = 0.1
 
 # (list) Application requirements
 # comma separated e.g. requirements = sqlite3,kivy
-requirements = python3,kivy,pymysql,pyaudio,tabulate,google-cloud-speech,cryptography,SpeechRecognition,KivyGradient,https://github.com/kivymd/KivyMD/archive/master.zip
+requirements = python3==3.11.7, hostpython3==3.11.7, pillow, kivy, pymysql, pyaudio, tabulate, google-cloud-speech, cryptography, SpeechRecognition, KivyGradient, https://github.com/kivymd/KivyMD/archive/master.zip
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes
@@ -64,10 +64,10 @@ orientation = portrait
 # author = © Copyright Info
 
 # change the major version of python used by the app
-osx.python_version = 3
+osx.python_version = 3.11.7
 
 # Kivy version to use
-osx.kivy_version = 1.9.1
+osx.kivy_version = 2.3.0
 
 #
 # Android specific
