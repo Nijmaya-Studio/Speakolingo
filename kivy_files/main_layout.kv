@@ -1,0 +1,576 @@
+#: import FadeTransition kivy.uix.screenmanager.FadeTransition
+#: import * kivy_files
+#: import Gradient kivy_gradient.Gradient
+#: import get_color_from_hex kivy.utils.get_color_from_hex
+#: import FrostedGlass frostedglass
+
+ScreenManager:
+    transition: FadeTransition()
+    BaseScreen:
+        name: "HomeNavigation"
+
+        ScreenManager:
+            id: navbarScreenManager
+            transition: FadeTransition()
+            HomeScreen:
+                name: "Home"
+            MissionScreen:
+                name: "Mission"
+            AccountScreen:
+                name: "Account"
+            BaseScreen:
+                name: "Leaderboard"
+        
+        BottomNavigation:
+            size_hint: 1,None
+            height: "72dp"
+
+            MDRelativeLayout:
+                pos_hint: {"left":0, "center_y":0.5}
+                size_hint: 0.4,1
+
+                MDIconButton:
+                    icon: "home"
+                    style: "standard"
+                    theme_font_size: "Custom"
+                    font_size: "26sp"
+                    pos_hint: {"center_x":0.25, "center_y":0.5}
+                    on_release: navbarScreenManager.current = "Home"
+
+                MDIconButton:
+                    icon: "list-box"
+                    style: "standard"
+                    theme_font_size: "Custom"
+                    font_size: "26sp"
+                    pos_hint: {"center_x":0.75, "center_y":0.5}
+                    on_release: navbarScreenManager.current = "Mission"
+
+            MDRelativeLayout:
+                pos_hint: {"right":1, "center_y":0.5}
+                size_hint: 0.4,1
+
+                MDIconButton:
+                    icon: "trophy"
+                    style: "standard"
+                    theme_font_size: "Custom"
+                    font_size: "26sp"
+                    pos_hint: {"center_x":0.25, "center_y":0.5}
+                    on_release: navbarScreenManager.current = "Leaderboard"
+
+                MDIconButton:
+                    icon: "account"
+                    style: "standard"
+                    theme_font_size: "Custom"
+                    font_size: "26sp"
+                    pos_hint: {"center_x":0.75, "center_y":0.5}
+                    on_release: navbarScreenManager.current = "Account"
+        
+        MDIconButton:
+            icon: "play"
+            style: "outlined"
+            theme_font_size: "Custom"
+            theme_bg_color: 'Custom'
+            md_bg_color: 'black'
+            font_size: "48sp"
+            radius: [self.height/2,]
+            size_hint: None, None
+            size: "72dp", "72dp"
+            on_release: app.StartNewSession()
+            pos: (root.width/2 - self.width/2, 108 - self.height/2)
+
+    PracticeScreen:
+        name: "Practice"
+
+    LessonCompleteScreen:
+        name: "LessonComplete"
+    
+    SettingsScreen:
+        name: "Settings"
+
+    LoginScreen:
+        name: "Login"
+
+    SignupScreen:
+        name: "Signup"
+
+    ForgotPasswordScreen:
+        name: "ForgotPassword"
+
+<BaseScreen>:
+    canvas.before:
+        Rectangle:
+            size: self.size
+            pos: self.pos
+            texture: Gradient.vertical(get_color_from_hex("0a0a0a"), get_color_from_hex("000000"))
+
+<BaseLabel>:
+    size_hint_y: None
+    halign: "center"
+    height: self.texture_size[1]
+    text_size: self.width, None
+
+<HomeScreen>:
+    MDTopAppBar:
+        type: "small"
+        size_hint_x: 1
+        pos_hint: {"center_x": .5, "top": 1}
+        md_bg_color: self.theme_cls.primaryColor
+
+        MDTopAppBarLeadingButtonContainer:
+
+            MDActionTopAppBarButton:
+                icon: "web"
+                on_release: root.openLanguageDialog()
+
+        MDTopAppBarTitle:
+            text: " "
+            pos_hint: {"center_x": .5}
+
+        MDTopAppBarTrailingButtonContainer:
+            MDActionTopAppBarButton:
+                icon: "cog"
+                on_release: app.root.current = "Settings"
+    BoxLayout:
+        id: test
+        orientation: "vertical"
+        size_hint: 1,None
+        height: root.height-290
+        pos: (root.width/2 - self.width/2, root.height-self.height-100)
+        padding: 25
+        spacing: 25
+
+        MDCard:
+            size_hint: 1, None
+            height: "60dp"
+            theme_bg_color: 'Custom'
+            style: 'outlined'
+            md_bg_color: self.theme_cls.backgroundColor
+
+            StreakMeter:
+                id: userStreak
+                size_hint: 1,1
+                orientation: "horizontal"
+                current_streak: '1111111'
+                md_bg_color: 'black'
+
+        MDCard:
+            size_hint: 1,None
+            height: "86dp"
+            orientation: 'horizontal'
+            theme_bg_color: 'Custom'
+            style: 'outlined'
+            md_bg_color: self.theme_cls.backgroundColor
+
+            UserInfoPanel:
+                id: userInfo
+
+        MDCard:
+            theme_bg_color: 'Custom'
+            style: 'outlined'
+            md_bg_color: self.theme_cls.backgroundColor
+            orientation: 'vertical'
+            padding: '15dp'
+
+            BaseLabel:
+                text: "Recent Sessions"
+                role: 'medium'
+                font_style: 'Title'
+
+            ScrollView:
+                do_scroll_x: False
+                do_scroll_y: True
+
+                MDList:
+                    id: recentSessionList
+
+    BoxLayout:
+        orientation: "horizontal"
+        size_hint: 1, None
+        pos: (root.width/2 - self.width/2, 108)
+        
+        MDButton:
+            radius: 0
+            theme_width: "Custom"
+            size_hint: 1,None
+            height: "56dp"
+            on_release: root.openTypeDropdown(self)
+            
+            MDButtonText:
+                id: typeDropText
+                text: "Text Type"
+                pos_hint: {'center_x':0.5, 'center_y':0.5}
+
+        MDButton:
+            radius: 0
+            theme_width: "Custom"
+            size_hint: 1,None
+            height: "56dp"
+            on_release: root.openFilterDialog()
+
+            MDButtonText:
+                text: "Text Filter"
+                pos_hint: {'center_x':0.5, 'center_y':0.5}
+
+<MissionScreen>:
+    BoxLayout:
+        orientation: "vertical"
+        size_hint: 1,None
+        height: root.height-190
+        pos: (root.width/2 - self.width/2, root.height-self.height)
+        padding: 25
+        spacing: 25
+
+        MDCard:
+            size_hint: 1, None
+            height: "100dp"
+            theme_bg_color: 'Custom'
+            style: 'outlined'
+            md_bg_color: self.theme_cls.backgroundColor
+            orientation: 'vertical'
+
+            RelativeLayout:
+                size_hint: 1,1
+                BaseLabel:
+                    padding: '10dp'
+                    text: "Weekly Challenge"
+                    role: 'medium'
+                    font_style: 'Title'
+                    pos_hint: {'center_x':0.5, 'top':1}
+
+                BaseLabel:
+                    text: "Challenge Name"
+                    role: 'medium'
+                    font_style: 'Body'
+                    pos_hint: {'center_x':0.5, 'center_y':0.5}
+
+                MDLinearProgressIndicator:
+                    padding: '10dp'
+                    size_hint: 0.9, None
+                    height: '6dp'
+                    pos_hint: {'center_x':0.5, 'top':0.15}
+                    value: 50
+
+        MDCard:
+            size_hint: 1,None
+            height: "100dp"
+            orientation: 'vertical'
+            theme_bg_color: 'Custom'
+            style: 'outlined'
+            md_bg_color: self.theme_cls.backgroundColor
+
+            padding: '10dp'
+            spacing: '5dp'
+
+            BaseLabel:
+                size_hint: 1,None
+                text: "Daily Tests"
+                role: 'medium'
+                font_style: 'Title'
+
+        MDCard:
+            theme_bg_color: 'Custom'
+            style: 'outlined'
+            md_bg_color: self.theme_cls.backgroundColor
+
+            BaseLabel:
+                padding: 15
+                text: "Saved Word"
+                role: 'medium'
+                font_style: 'Title'
+                pos_hint: {'center_x':0.5, 'top':1}
+
+<PracticeScreen>:
+    MDRelativeLayout:
+        size_hint_x: 0.9
+        size_hint_y: 0.5
+        pos_hint: {"center_y":0.6, "center_x": .5}
+        ScrollView:
+            id: textToSpeakScrollView
+            always_overscroll: False
+            do_scroll_x: False
+            do_scroll_y: False
+            Label:
+                markup: True
+                text: root.textToSpeak
+                font_name: root.language
+                font_size: "28sp"
+                size_hint_y: None
+                height: self.texture_size[1]
+                text_size: self.width, None
+                padding: 50
+
+    Label:
+        text: root.previewText
+        color: '#a0a0a0'
+        halign: 'center'
+        font_name: root.language
+        font_size: "28sp"
+        size_hint_y: None
+        height: self.texture_size[1]
+        text_size: self.width, None
+        width: "100dp"
+        pos_hint: {'center_x': 0.5, 'center_y':0.35}
+
+    MDIconButton:
+        icon: "arrow-left"
+        style: "outlined"
+        theme_font_size: "Custom"
+        theme_bg_color: 'Custom'
+        md_bg_color: 'black'
+        font_size: "24sp"
+        radius: [self.height/2,]
+        size_hint: None, None
+        size: "48dp", "48dp"
+        pos: (root.width/2 - self.width/2 - 120, 108 - self.height/2)
+        on_release: app.ChangeToHomeScreen()
+
+    MDIconButton:
+        id: toggle_speech
+        icon: "microphone"
+        style: "outlined"
+        theme_font_size: "Custom"
+        theme_bg_color: 'Custom'
+        md_bg_color: 'black'
+        font_size: "48sp"
+        radius: [self.height/2,]
+        size_hint: None, None
+        size: "72dp", "72dp"
+        pos: (root.width/2 - self.width/2, 108 - self.height/2)
+        on_release: root.ToggleListening()
+
+    MDIconButton:
+        icon: "skip-next"
+        style: "outlined"
+        theme_font_size: "Custom"
+        theme_bg_color: 'Custom'
+        md_bg_color: 'black'
+        font_size: "24sp"
+        radius: [self.height/2,]
+        size_hint: None, None
+        size: "48dp", "48dp"
+        pos: (root.width/2 - self.width/2 + 120, 108 - self.height/2)
+        on_release: root.SkipWord()
+
+<LessonCompleteScreen>:
+    MDIconButton:
+        icon: "arrow-left"
+        style: "standard"
+        pos_hint: {"center_x":0.1, "top":0.975}
+        on_release: app.ChangeToHomeScreen()
+
+    BaseLabel:
+        text: "LessonComplete"
+        pos_hint: {'center_x': 0.5,'center_y': 0.5}
+
+<SettingsScreen>:
+    md_bg_color: self.theme_cls.backgroundColor
+    MDTopAppBar:
+        type: "small"
+        size_hint_x: 1
+        pos_hint: {"center_x": .5, "top": 1}
+        md_bg_color: self.theme_cls.primaryColor
+
+        MDTopAppBarLeadingButtonContainer:
+            MDActionTopAppBarButton:
+                icon: "arrow-left"
+                on_release: app.ChangeToHomeScreen()
+
+<LoginScreen>:
+    md_bg_color: self.theme_cls.backgroundColor
+    MDRelativeLayout:
+        MDIconButton:
+            icon: "arrow-left"
+            style: "standard"
+            pos_hint: {"center_x":0.1, "top":0.975}
+            on_release: app.ChangeToHomeScreen()
+
+        MDLabel:
+            text:"LOGIN"
+            font_style: "Headline"
+            size_hint_y: None
+            halign: "center"
+            height: self.texture_size[1]
+            text_size: self.width, None
+            pos_hint: {"center_y":0.875, "center_x":0.5}
+    
+        MDTextField:
+            id: emailField
+            mode: "outlined"
+            size_hint_x: None
+            width: "240dp"
+            pos_hint: {"center_y":0.75, "center_x":0.5}
+
+            MDTextFieldLeadingIcon:
+                icon: "account"
+            MDTextFieldHintText:
+                text:"Email"
+
+        MDTextField:
+            id: passwordField
+            mode: "outlined"
+            size_hint_x: None
+            width: "240dp"
+            pos_hint: {"center_y":0.6, "center_x":0.5}
+
+            MDTextFieldLeadingIcon:
+                icon: "key"
+            MDTextFieldHintText:
+                text:"Password"
+            MDTextFieldMaxLengthText:
+                max_text_length: 16
+
+        MDRelativeLayout:
+            size_hint:0,0
+            pos_hint: {"center_y":0.5, "center_x":0.5}
+            MDCheckbox:
+                size_hint: None, None
+                size: "48dp","48dp"
+                pos:(-185,0)
+            
+            MDLabel:
+                size_hint:None,None
+                text:"Remember Me?"
+                font_style: "Label"
+                role: "medium"
+                font_name: "Comic"
+                size_hint_y: None
+                halign: "center"
+                height: self.texture_size[1]
+                width: 150
+                text_size: self.width, None
+                pos:(-155,2)
+
+        MDButton:
+            style: "outlined"
+            theme_width: "Custom"
+            height: "56dp"
+            width: "240dp"
+            pos_hint: {"center_y":0.4, "center_x":0.5}
+            on_release: root.Login()
+
+            MDButtonText:
+                text: "Login"
+                pos_hint: {"center_x":0.5, "center_y":0.5}
+
+        BaseLabel:
+            markup: True
+            font_style: "Label"
+            role: "medium"
+            font_name: "Comic"
+            size_hint:.4,None
+            text:"[ref=forgotPassword]ForgotPassword?[/ref]"
+            pos_hint: {"center_x":0.5, "center_y":0.325}
+            on_ref_press: root.manager.current = "ForgotPassword"
+        
+        MDDivider:
+            size_hint_x: 0.75
+            pos_hint: {'center_x':0.5, "center_y":0.25}
+
+        MDRelativeLayout:
+            size_hint: 0,0
+            pos_hint: {'center_x':0.5, "center_y":0.15}
+
+            MDIconButton:
+                icon: "google"
+                style: "filled"
+                pos:(-90,0)
+            MDIconButton:
+                icon: "facebook"
+                style: "filled"
+                pos: (50,0)
+
+        BaseLabel:
+            markup: True
+            font_style: "Label"
+            role: "medium"
+            font_name: "Comic"
+            size_hint:.6,None
+            text:"[ref=signup]Don't have an account, Signup![/ref]"
+            pos_hint: {"center_x":0.5, "center_y":0.1}
+            on_ref_press: root.manager.current = "Signup"
+
+<SignupScreen>:
+    md_bg_color: self.theme_cls.backgroundColor
+    MDRelativeLayout:
+        MDIconButton:
+            icon: "arrow-left"
+            style: "standard"
+            pos_hint: {"center_x":0.1, "top":0.975}
+            on_release: root.manager.current = "HomeNavigation"
+
+        MDLabel:
+            text:"SIGNUP"
+            font_style: "Headline"
+            size_hint_y: None
+            halign: "center"
+            height: self.texture_size[1]
+            text_size: self.width, None
+            pos_hint: {"center_y":0.875, "center_x":0.5}
+    
+        MDTextField:
+            id: usernameField
+            mode: "outlined"
+            size_hint_x: None
+            width: "240dp"
+            pos_hint: {"center_y":0.75, "center_x":0.5}
+
+            MDTextFieldLeadingIcon:
+                icon: "account"
+            MDTextFieldHintText:
+                text:"Username"
+            MDTextFieldMaxLengthText:
+                max_text_length: 12
+
+        MDTextField:
+            id: emailField
+            mode: "outlined"
+            size_hint_x: None
+            width: "240dp"
+            pos_hint: {"center_y":0.6, "center_x":0.5}
+
+            MDTextFieldLeadingIcon:
+                icon: "gmail"
+            MDTextFieldHintText:
+                text:"Email Address"
+
+        MDTextField:
+            id: passwordField
+            mode: "outlined"
+            size_hint_x: None
+            width: "240dp"
+            pos_hint: {"center_y":0.45, "center_x":0.5}
+
+            MDTextFieldLeadingIcon:
+                icon: "key"
+            MDTextFieldHintText:
+                text:"Create a new password"
+            MDTextFieldMaxLengthText:
+                max_text_length: 16
+
+        MDTextField:
+            id: reEnterPasswordField
+            mode: "outlined"
+            size_hint_x: None
+            width: "240dp"
+            pos_hint: {"center_y":0.3, "center_x":0.5}
+
+            MDTextFieldLeadingIcon:
+                icon: "key"
+            MDTextFieldHintText:
+                text:"Enter password again"
+            MDTextFieldMaxLengthText:
+                max_text_length: 16
+
+        MDButton:
+            style: "outlined"
+            theme_width: "Custom"
+            height: "56dp"
+            width: "240dp"
+            pos_hint: {"center_y":0.15, "center_x":0.5}
+            on_release: root.Signup()
+
+            MDButtonText:
+                text: "Signup"
+                pos_hint: {"center_x":0.5, "center_y":0.5}
+
+<ForgotPassword>:
